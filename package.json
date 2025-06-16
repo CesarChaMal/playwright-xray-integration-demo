@@ -1,0 +1,15 @@
+{
+  "name": "playwright-xray-integration-demo",
+  "version": "1.0.0",
+  "scripts": {
+    "test:dev": "cross-env TEST_ENV=dev npx playwright test",
+    "test:test": "cross-env TEST_ENV=test npx playwright test",
+    "test:local": "cross-env TEST_ENV=local npx playwright test",
+    "test:local:xray": "npm run test:local && ts-node upload-xray.ts"    
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1"
+  }
+}
