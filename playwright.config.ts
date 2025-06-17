@@ -13,7 +13,7 @@ export default defineConfig({
   workers: isCI ? 1 : undefined,
   reporter: [
     ['list'],
-    ['junit', { outputFile: 'results.xml' }]
+    ['junit', { outputFile: 'results.xml', embedAnnotationsAsProperties: true }],
   ],
 
   use: {

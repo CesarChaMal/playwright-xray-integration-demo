@@ -1,0 +1,14 @@
+<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="4.320759">
+<testsuite name="example.spec.ts" timestamp="2025-06-17T01:48:05.638Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.419" errors="0">
+<testcase name="TEST-2 - Navigate to BASE_URL and verify title" classname="example.spec.ts" time="2.419">
+</testcase>
+</testsuite>
+<testsuite name="example.spec.ts" timestamp="2025-06-17T01:48:05.638Z" hostname="firefox" tests="1" failures="0" skipped="0" time="2.637" errors="0">
+<testcase name="TEST-2 - Navigate to BASE_URL and verify title" classname="example.spec.ts" time="2.637">
+</testcase>
+</testsuite>
+<testsuite name="example.spec.ts" timestamp="2025-06-17T01:48:05.638Z" hostname="webkit" tests="1" failures="0" skipped="0" time="2.499" errors="0">
+<testcase name="TEST-2 - Navigate to BASE_URL and verify title" classname="example.spec.ts" time="2.499">
+</testcase>
+</testsuite>
+</testsuites>

@@ -1,6 +1,7 @@
-# Playwright Multi-Environment Test Project
+# Playwright Multi-Environment Test Project with Xray Integration
 
 This is a Playwright-based end-to-end testing project designed with support for multiple environments using `.env` configuration files.
+It also supports direct integration with [Xray Test Management for Jira](https://www.getxray.app/) — for both **Jira Cloud** and **Jira Server**.
 
 ---
 
@@ -17,7 +18,8 @@ playwright-env-demo/
 ├── tests/
 │   └── example.spec.ts        # Sample test
 ├── playwright.config.ts       # Main Playwright configuration
-├── package.json               # NPM scripts and dependencies
+├── upload-xray.ts             # Xray Cloud/Server upload integration
+├── package.json
 ├── .gitignore
 └── README.md
 ```
@@ -32,13 +34,69 @@ Install dependencies:
 npm install
 ```
 
-Install Playwright browsers:
+Install Playwright browsers and system dependencies:
 
 ```bash
+npx playwright install-deps
 npx playwright install
 ```
 
-Set your desired environment by running:
+---
+
+## 🌍 Environment Files
+
+Environment variables are stored in `.env.{env}` files inside `app-commons/environments/`.
+
+Sample fields:
+
+```env
+BASE_URL=https://example.com
+BROWSER_NAME=chromium
+USER_NAME=test-user
+PASSWORD=secret
+PROXY_HOST=
+```
+
+Also add Xray config in `.env.local` depending on your platform:
+
+### For Xray Cloud:
+
+```env
+XRAY_MODE=cloud
+XRAY_CLIENT_ID=your-client-id
+XRAY_CLIENT_SECRET=your-client-secret
+XRAY_PROJECT_KEY=TEST
+```
+
+### For Xray Server:
+
+```env
+XRAY_MODE=server
+XRAY_USERNAME=your-username
+XRAY_PASSWORD=your-password
+XRAY_JIRA_BASE_URL=http://localhost:9094
+XRAY_PROJECT_KEY=TEST
+```
+
+---
+
+## 🧪 Writing Tests
+
+Reference environment variables like this:
+
+```ts
+import ENV from '../app-commons/environments/env';
+
+test('TEST-1 - Navigate to BASE_URL and verify title', async ({ page }) => {
+  await page.goto(ENV.BASE_URL);
+});
+```
+
+> ℹ️ Including the test key (e.g., `TEST-1`) in the test title allows Xray to match the test automatically.
+
+---
+
+## 🧾 Running Tests
 
 ```bash
 # Run using dev environment
@@ -47,76 +105,69 @@ npm run test:dev
 # Run using test environment
 npm run test:test
 
-# Run using local environment (includes auth/proxy config)
+# Run using local environment
 npm run test:local
 ```
 
 ---
 
-## 🌍 .env Files
+## ☁️ Uploading Results to Xray (Cloud or Server)
 
-Environment variables are managed using `.env.{env}` files in `app-commons/environments/`. Example fields include:
-
-```env
-BASE_URL=
-BROWSER_NAME=
-USER_NAME=
-PASSWORD=
-PROXY_HOST=
-```
-
----
-
-## 🧪 Writing Tests
-
-Use `ENV` variables like this:
-
-```ts
-import ENV from '../app-commons/environments/env';
-
-test('My Test', async ({ page }) => {
-  await page.goto(ENV.BASE_URL);
-});
-```
-
----
-
-## 🧾 Running Tests
-
-To run tests with Playwright, use the following commands:
+Generate and upload test results to Xray via:
 
 ```bash
-# Run all tests
-npx playwright test
+npm run test:local:xray
+```
 
-# Run tests in a specific file
-npx playwright test tests/example.spec.ts
+This does:
 
-# Run tests with debugging enabled
-npx playwright test --debug
+1. Run tests with Playwright
+2. Generate `results.xml` (JUnit format)
+3. Upload it to Xray via REST API using `upload-xray.ts`
+
+### 🔁 Full Local Test + Xray Flow:
+
+```bash
+npx playwright install-deps
+npx playwright install
+npm run test:local:xray
+```
+
+Expected output:
+
+```bash
+✅ 3 tests passed (5.4s)
+✅ Authenticated to Xray Cloud
+✅ Upload successful: { testExecIssue: "TEST-12", ... }
 ```
 
 ---
 
 ## 🧾 Reporters & Debugging
 
-Console logs appear when using the `list` reporter. HTML reports are generated on each run.
+Playwright is configured with:
+
+* `list` reporter (for console output)
+* `junit` reporter (for Xray integration)
+
+To run with debugging:
+
+```bash
+npx playwright test --debug
+```
 
 ---
 
-## 🔒 Notes
+## 📦 Key Dependencies
 
-- `.env.local` is ignored by Git to prevent committing sensitive credentials.
-- Customize proxy, auth, browser, and URL per environment easily.
-
----
-
-## 📦 Dependencies
-
-- `@playwright/test`
-- `dotenv`
-- `cross-env`
+* `@playwright/test`
+* `cross-env`
+* `dotenv`
+* `axios`
+* `form-data`
+* `ts-node`
+* `typescript`
 
 ---
 
-Happy Testing 🎭
+Happy Testing 🎭 + Seamless Reporting 📊
