@@ -1,12 +1,14 @@
 import { test, expect } from '@playwright/test';
 import ENV from '../app-commons/environments/env';
 
-test('TEST-2', async ({ page }) => {
-  if (!ENV.BASE_URL) {
-    throw new Error('BASE_URL is not defined in the environment variables.');
-  }
+test.describe('Base URL Health Check', () => {
+  test('TEST-2 - should load the base URL and verify title contains "Google"', async ({ page }) => {
+    const baseUrl = ENV.BASE_URL;
 
-  await page.goto(ENV.BASE_URL);
-  const title = await page.title();
-  expect(title).toContain('Google');
+    test.skip(!baseUrl, 'BASE_URL is not defined in the environment variables');
+
+    await page.goto(baseUrl!);
+    const title = await page.title();
+    expect(title).toContain('Google');
+  });
 });

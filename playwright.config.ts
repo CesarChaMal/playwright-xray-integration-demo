@@ -3,6 +3,19 @@ import ENV from './app-commons/environments/env';
 
 const isCI = !!process.env.CI;
 
+const browserName = ENV.BROWSER_NAME?.toLowerCase() || 'chromium';
+
+const browserMap = {
+  chromium: { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+  firefox: { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+  webkit: { name: 'webkit', use: { ...devices['Desktop Safari'] } }
+};
+
+const projects =
+  browserName === 'all'
+    ? Object.values(browserMap)
+    : [browserMap[browserName]];
+
 export default defineConfig({
   globalSetup: './global-setup.ts',
   testDir: './tests',
@@ -44,9 +57,5 @@ export default defineConfig({
     navigationTimeout: 60000,
   },
 
-  projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } }
-  ],
+  projects: projects,
 });

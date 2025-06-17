@@ -9,14 +9,15 @@ const filePath = 'results.xml';
 const projectKey = process.env.XRAY_PROJECT_KEY || '';
 const mode = process.env.XRAY_MODE || 'cloud';
 
-const authUrl = process.env.XRAY_CLOUD_AUTH_URL || 'https://xray.cloud.getxray.app/api/v2/authenticate';
-const apiBase = process.env.XRAY_CLOUD_API_BASE || 'https://xray.cloud.getxray.app/api/v2';
+const authUrl = process.env.XRAY_CLOUD_AUTH_URL || 'https://eu.xray.cloud.getxray.app/api/v2/authenticate';
+const apiBase = process.env.XRAY_CLOUD_API_BASE || 'https://eu.xray.cloud.getxray.app/api/v2';
 
 if (!fs.existsSync(filePath)) {
   console.error(`❌ Missing ${filePath}. Run the tests first.`);
   process.exit(1);
 }
 
+// === CLOUD: Use raw XML as body ===
 const uploadToXrayCloud = async () => {
   const clientId = process.env.XRAY_CLIENT_ID;
   const clientSecret = process.env.XRAY_CLIENT_SECRET;
@@ -35,21 +36,17 @@ const uploadToXrayCloud = async () => {
 
   const token = tokenRes.data;
 
-  // 2. Build form-data with content-type and filename
-  const form = new FormData();
-  form.append('file', fs.createReadStream(filePath), {
-    filename: 'results.xml',
-    contentType: 'application/xml',
-  });
+  // 2. Read XML as string
+  const xml = fs.readFileSync(filePath, 'utf8');
 
-  // 3. Post JUnit result to Xray Cloud
+  // 3. Post JUnit result to Xray Cloud as RAW XML
   const res = await axios.post(
     `${apiBase}/import/execution/junit?projectKey=${projectKey}`,
-    form,
+    xml,
     {
       headers: {
         Authorization: `Bearer ${token}`,
-        ...form.getHeaders(), // include multipart boundary
+        'Content-Type': 'text/xml',
       },
       maxBodyLength: Infinity,
     }
@@ -58,6 +55,7 @@ const uploadToXrayCloud = async () => {
   console.log('✅ Uploaded to Xray Cloud:', res.data);
 };
 
+// === SERVER: Use multipart/form-data ===
 const uploadToXrayServer = async () => {
   const baseUrl = process.env.XRAY_JIRA_BASE_URL;
   const username = process.env.XRAY_USERNAME;

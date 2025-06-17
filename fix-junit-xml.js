@@ -9,25 +9,46 @@ fs.readFile(file, (err, data) => {
   xml2js.parseString(data, (err, result) => {
     if (err) throw err;
 
-    const suites = result.testsuites.testsuite;
+    // Normalize to always wrap in <testsuites>
+    let suites = [];
+
+    if (result.testsuites?.testsuite) {
+      suites = result.testsuites.testsuite;
+    } else if (result.testsuite) {
+      suites = [result.testsuite];
+    } else {
+      console.error('❌ No <testsuite> or <testsuites> found');
+      return;
+    }
+
     suites.forEach((suite) => {
+      if (!suite.testcase) return;
+
       suite.testcase.forEach((testcase) => {
-        // Extract issue key if in format "TEST-123 - something"
-        const match = testcase.$.name.match(/(TEST-\d+)/);
+        let originalName = testcase.$.name;
+        const match = originalName.match(/(TEST-\d+)/i);
+
         if (match) {
-          testcase.$.name = match[1]; // Keep only the issue key
+          // Keep only the Jira issue key as name
+          testcase.$.name = match[1].toUpperCase();
+        } else {
+          console.warn(`⚠️ No Jira issue key found in: "${originalName}"`);
         }
 
-        // Ensure <system-out> is present (needed by Xray)
         if (!testcase['system-out']) {
           testcase['system-out'] = ['Passed via Playwright'];
         }
       });
     });
 
-    const builder = new xml2js.Builder({ headless: false, renderOpts: { pretty: true } });
-    const xml = builder.buildObject(result);
+    const builder = new xml2js.Builder({
+      headless: false,
+      rootName: 'testsuites',
+      renderOpts: { pretty: true },
+    });
+
+    const xml = builder.buildObject({ testsuite: suites });
     fs.writeFileSync(file, xml);
-    console.log('✅ Fixed results.xml JUnit format (names mapped to Jira issue keys only + system-out)');
+    console.log('✅ Fixed results.xml for Xray: test names reduced to issue keys and wrapped in <testsuites>');
   });
 });
