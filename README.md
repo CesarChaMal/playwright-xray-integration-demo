@@ -66,6 +66,8 @@ XRAY_MODE=cloud
 XRAY_CLIENT_ID=your-client-id
 XRAY_CLIENT_SECRET=your-client-secret
 XRAY_PROJECT_KEY=TEST
+XRAY_CLOUD_AUTH_URL=https://xray.cloud.getxray.app/api/v2/authenticate
+XRAY_CLOUD_API_BASE=https://xray.cloud.getxray.app/api/v2
 ```
 
 ### For Xray Server:
