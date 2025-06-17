@@ -1,15 +1,28 @@
 const fs = require('fs');
+const xml2js = require('xml2js');
 
-const filePath = 'results.xml';
-let content = fs.readFileSync(filePath, 'utf-8');
+const file = 'results.xml';
 
-if (!content.startsWith('<?xml')) {
-  content = `<?xml version="1.0" encoding="UTF-8"?>\n${content}`;
-}
+fs.readFile(file, (err, data) => {
+  if (err) throw err;
 
-if (!content.trim().endsWith('</testsuites>')) {
-  content += '\n</testsuites>';
-}
+  xml2js.parseString(data, (err, result) => {
+    if (err) throw err;
 
-fs.writeFileSync(filePath, content);
-console.log('✅ Fixed results.xml JUnit format');
+    const suites = result.testsuites.testsuite;
+    suites.forEach((suite) => {
+      suite.testcase.forEach((testcase) => {
+        // Extract issue key if in format "TEST-123 - something"
+        const match = testcase.$.name.match(/(TEST-\d+)/);
+        if (match) {
+          testcase.$.name = match[1]; // Keep only the issue key
+        }
+      });
+    });
+
+    const builder = new xml2js.Builder();
+    const xml = builder.buildObject(result);
+    fs.writeFileSync(file, xml);
+    console.log('✅ Fixed results.xml JUnit format (names mapped to Jira issue keys only)');
+  });
+});

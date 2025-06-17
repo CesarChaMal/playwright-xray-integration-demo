@@ -1,15 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="4.9176530000000005">
-<testsuite name="example.spec.ts" timestamp="2025-06-17T02:10:24.991Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.536" errors="0">
-<testcase name="TEST-2 - Navigate to BASE_URL and verify title" classname="example.spec.ts" time="2.536">
-</testcase>
-</testsuite>
-<testsuite name="example.spec.ts" timestamp="2025-06-17T02:10:24.991Z" hostname="firefox" tests="1" failures="0" skipped="0" time="3.052" errors="0">
-<testcase name="TEST-2 - Navigate to BASE_URL and verify title" classname="example.spec.ts" time="3.052">
-</testcase>
-</testsuite>
-<testsuite name="example.spec.ts" timestamp="2025-06-17T02:10:24.991Z" hostname="webkit" tests="1" failures="0" skipped="0" time="2.986" errors="0">
-<testcase name="TEST-2 - Navigate to BASE_URL and verify title" classname="example.spec.ts" time="2.986">
-</testcase>
-</testsuite>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="4.450174">
+  <testsuite name="example.spec.ts" timestamp="2025-06-17T02:14:05.228Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.397" errors="0">
+    <testcase name="TEST-2" classname="example.spec.ts" time="2.397"/>
+  </testsuite>
+  <testsuite name="example.spec.ts" timestamp="2025-06-17T02:14:05.228Z" hostname="firefox" tests="1" failures="0" skipped="0" time="2.714" errors="0">
+    <testcase name="TEST-2" classname="example.spec.ts" time="2.714"/>
+  </testsuite>
+  <testsuite name="example.spec.ts" timestamp="2025-06-17T02:14:05.228Z" hostname="webkit" tests="1" failures="0" skipped="0" time="2.64" errors="0">
+    <testcase name="TEST-2" classname="example.spec.ts" time="2.64"/>
+  </testsuite>
 </testsuites>
