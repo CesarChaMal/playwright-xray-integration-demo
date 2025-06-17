@@ -17,12 +17,17 @@ fs.readFile(file, (err, data) => {
         if (match) {
           testcase.$.name = match[1]; // Keep only the issue key
         }
+
+        // Ensure <system-out> is present (needed by Xray)
+        if (!testcase['system-out']) {
+          testcase['system-out'] = ['Passed via Playwright'];
+        }
       });
     });
 
-    const builder = new xml2js.Builder();
+    const builder = new xml2js.Builder({ headless: false, renderOpts: { pretty: true } });
     const xml = builder.buildObject(result);
     fs.writeFileSync(file, xml);
-    console.log('✅ Fixed results.xml JUnit format (names mapped to Jira issue keys only)');
+    console.log('✅ Fixed results.xml JUnit format (names mapped to Jira issue keys only + system-out)');
   });
 });

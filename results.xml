@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="4.450174">
-  <testsuite name="example.spec.ts" timestamp="2025-06-17T02:14:05.228Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.397" errors="0">
-    <testcase name="TEST-2" classname="example.spec.ts" time="2.397"/>
+<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="4.5739030000000005">
+  <testsuite name="example.spec.ts" timestamp="2025-06-17T02:31:14.646Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.443" errors="0">
+    <testcase name="TEST-2" classname="example.spec.ts" time="2.443">
+      <system-out>Passed via Playwright</system-out>
+    </testcase>
   </testsuite>
-  <testsuite name="example.spec.ts" timestamp="2025-06-17T02:14:05.228Z" hostname="firefox" tests="1" failures="0" skipped="0" time="2.714" errors="0">
-    <testcase name="TEST-2" classname="example.spec.ts" time="2.714"/>
+  <testsuite name="example.spec.ts" timestamp="2025-06-17T02:31:14.646Z" hostname="firefox" tests="1" failures="0" skipped="0" time="2.871" errors="0">
+    <testcase name="TEST-2" classname="example.spec.ts" time="2.871">
+      <system-out>Passed via Playwright</system-out>
+    </testcase>
   </testsuite>
-  <testsuite name="example.spec.ts" timestamp="2025-06-17T02:14:05.228Z" hostname="webkit" tests="1" failures="0" skipped="0" time="2.64" errors="0">
-    <testcase name="TEST-2" classname="example.spec.ts" time="2.64"/>
+  <testsuite name="example.spec.ts" timestamp="2025-06-17T02:31:14.646Z" hostname="webkit" tests="1" failures="0" skipped="0" time="2.747" errors="0">
+    <testcase name="TEST-2" classname="example.spec.ts" time="2.747">
+      <system-out>Passed via Playwright</system-out>
+    </testcase>
   </testsuite>
 </testsuites>
