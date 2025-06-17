@@ -7,6 +7,7 @@ dotenv.config({ path: './app-commons/environments/.env.local' });
 
 const filePath = 'results.xml';
 const projectKey = process.env.XRAY_PROJECT_KEY || '';
+const testExecKey = process.env.XRAY_TEST_EXEC_KEY || ''; // Optionally link to existing Test Execution
 const mode = process.env.XRAY_MODE || 'cloud';
 
 const authUrl = process.env.XRAY_CLOUD_AUTH_URL || 'https://eu.xray.cloud.getxray.app/api/v2/authenticate';
@@ -17,7 +18,7 @@ if (!fs.existsSync(filePath)) {
   process.exit(1);
 }
 
-// === CLOUD: Use raw XML as body ===
+// ==== CLOUD: Use raw XML as body ====
 const uploadToXrayCloud = async () => {
   const clientId = process.env.XRAY_CLIENT_ID;
   const clientSecret = process.env.XRAY_CLIENT_SECRET;
@@ -39,23 +40,25 @@ const uploadToXrayCloud = async () => {
   // 2. Read XML as string
   const xml = fs.readFileSync(filePath, 'utf8');
 
-  // 3. Post JUnit result to Xray Cloud as RAW XML
-  const res = await axios.post(
-    `${apiBase}/import/execution/junit?projectKey=${projectKey}`,
-    xml,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'text/xml',
-      },
-      maxBodyLength: Infinity,
-    }
-  );
+  // 3. Build URL with params
+  const params = [];
+  if (testExecKey) params.push(`testExecKey=${encodeURIComponent(testExecKey)}`);
+  if (projectKey && !testExecKey) params.push(`projectKey=${encodeURIComponent(projectKey)}`);
+  const url = `${apiBase}/import/execution/junit${params.length ? '?' + params.join('&') : ''}`;
+
+  // 4. POST JUnit result as RAW XML
+  const res = await axios.post(url, xml, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'text/xml',
+    },
+    maxBodyLength: Infinity,
+  });
 
   console.log('✅ Uploaded to Xray Cloud:', res.data);
 };
 
-// === SERVER: Use multipart/form-data ===
+// ==== SERVER: Use multipart/form-data ====
 const uploadToXrayServer = async () => {
   const baseUrl = process.env.XRAY_JIRA_BASE_URL;
   const username = process.env.XRAY_USERNAME;
@@ -71,15 +74,17 @@ const uploadToXrayServer = async () => {
     contentType: 'application/xml',
   });
 
-  const res = await axios.post(
-    `${baseUrl}/rest/raven/1.0/import/execution/junit?projectKey=${projectKey}`,
-    form,
-    {
-      auth: { username, password },
-      headers: form.getHeaders(),
-      maxBodyLength: Infinity,
-    }
-  );
+  // Build URL with params
+  const params = [];
+  if (testExecKey) params.push(`testExecKey=${encodeURIComponent(testExecKey)}`);
+  if (projectKey && !testExecKey) params.push(`projectKey=${encodeURIComponent(projectKey)}`);
+  const url = `${baseUrl}/rest/raven/1.0/import/execution/junit${params.length ? '?' + params.join('&') : ''}`;
+
+  const res = await axios.post(url, form, {
+    auth: { username, password },
+    headers: form.getHeaders(),
+    maxBodyLength: Infinity,
+  });
 
   console.log('✅ Uploaded to Xray Server:', res.data);
 };
@@ -93,7 +98,19 @@ const uploadToXrayServer = async () => {
     } else {
       throw new Error(`Unknown XRAY_MODE: ${mode}`);
     }
-  } catch (err: any) {
-    console.error('❌ Upload failed:', err.response?.data || err.message);
+  } catch (err: unknown) {
+    if (err && typeof err === "object") {
+      // axios errors have 'response' property
+      const axiosErr = err as { response?: any; message?: string };
+      if (axiosErr.response && axiosErr.response.data) {
+        console.error('❌ Upload failed:', axiosErr.response.data);
+      } else if (axiosErr.message) {
+        console.error('❌ Upload failed:', axiosErr.message);
+      } else {
+        console.error('❌ Upload failed:', axiosErr);
+      }
+    } else {
+      console.error('❌ Upload failed:', err);
+    }
   }
 })();

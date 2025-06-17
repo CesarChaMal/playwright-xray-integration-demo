@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import ENV from '../app-commons/environments/env';
 
 test.describe('Base URL Health Check', () => {
-  test('TEST-2 - should load the base URL and verify title contains "Google"', async ({ page }) => {
+  test('TEST-3 - should load the base URL and verify title contains "Google"', async ({ page }) => {
     const baseUrl = ENV.BASE_URL;
 
     test.skip(!baseUrl, 'BASE_URL is not defined in the environment variables');

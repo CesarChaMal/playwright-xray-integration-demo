@@ -20,6 +20,7 @@ const ENV = {
   XRAY_CLOUD_API_BASE: process.env.XRAY_CLOUD_API_BASE || 'https://xray.cloud.getxray.app/api/v2',
   XRAY_CLIENT_ID: process.env.XRAY_CLIENT_ID || '',
   XRAY_CLIENT_SECRET: process.env.XRAY_CLIENT_SECRET || '',
+  XRAY_TEST_EXEC_KEY: process.env.XRAY_TEST_EXEC_KEY || '',
   XRAY_USERNAME: process.env.XRAY_USERNAME || '',
   XRAY_PASSWORD: process.env.XRAY_PASSWORD || '',
   XRAY_JIRA_BASE_URL: process.env.XRAY_JIRA_BASE_URL || '',

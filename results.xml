@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <testsuites>
-  <testsuite name="example.spec.ts" timestamp="2025-06-17T14:58:05.011Z" hostname="chromium" tests="1" failures="0" skipped="0" time="5.874" errors="0">
-    <testcase name="TEST-2" classname="example.spec.ts" time="5.874">
+  <testsuite name="example.spec.ts" timestamp="2025-06-17T16:07:37.253Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.729" errors="0">
+    <testcase name="TEST-2" classname="example.spec.ts" time="2.729">
       <system-out>Passed via Playwright</system-out>
     </testcase>
   </testsuite>
